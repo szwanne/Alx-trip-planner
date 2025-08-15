@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+// import { Splide, SplideSlide } from "@splidejs/react-splide";
+// import "@splidejs/react-splide/css";
 
 // Static list of popular locations
 const popularCities = [
   { name: "Los Angeles", lat: 34.0522, lon: -118.2437 },
   { name: "Paris", lat: 48.8566, lon: 2.3522 },
-  { name: "Tokyo", lat: 35.6762, lon: 139.6503 },
+  // { name: "Tokyo", lat: 35.6762, lon: 139.6503 },
 ];
 
 function Popular() {
@@ -25,7 +28,7 @@ function Popular() {
           const tr_longitude = city.lon + delta;
 
           const response = await fetch(
-            `https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary?bl_latitude=${bl_latitude}&tr_latitude=${tr_latitude}&bl_longitude=${bl_longitude}&tr_longitude=${tr_longitude}&limit=9&currency=USD&lunit=km&lang=en_US`,
+            `https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary?bl_latitude=${bl_latitude}&tr_latitude=${tr_latitude}&bl_longitude=${bl_longitude}&tr_longitude=${tr_longitude}&limit=5&currency=USD&lunit=km&lang=en_US`,
             {
               method: "GET",
               headers: {
@@ -62,28 +65,82 @@ function Popular() {
   };
 
   return (
-    <div>
-      <h1>Popular Destinations</h1>
+    <Container>
+      <Title>Popular Destinations</Title>
       {popular.map(({ city, attractions }) => (
-        <div key={city}>
-          <h2>{city}</h2>
-          <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        <Section key={city}>
+          <CityName>{city}</CityName>
+          <CardsWrapper>
             {attractions.map((a) => (
-              <div key={a.name} style={{ width: "200px" }}>
-                <img
+              <Card key={a.name}>
+                <Image
                   src={a.photo || "https://via.placeholder.com/200"}
                   alt={a.name}
-                  style={{ width: "100%" }}
                 />
-                <p>{a.name}</p>
-                <small>{a.rating ? `${a.rating} ★` : "No rating"}</small>
-              </div>
+                <CardTitle>{a.name}</CardTitle>
+                <Rating>
+                  {a.rating ? `${a.rating} ★` : "No rating available"}
+                </Rating>
+              </Card>
             ))}
-          </div>
-        </div>
+          </CardsWrapper>
+        </Section>
       ))}
-    </div>
+    </Container>
   );
 }
+
+// Styled Components
+const Container = styled.div`
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+`;
+
+const Title = styled.h1`
+  text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const Section = styled.div`
+  margin-bottom: 3rem;
+`;
+
+const CityName = styled.h2`
+  margin-bottom: 1rem;
+  color: #333;
+`;
+
+const CardsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+`;
+
+const Card = styled.div`
+  width: 200px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+`;
+
+const CardTitle = styled.p`
+  font-weight: bold;
+  padding: 0.5rem;
+  color: #222;
+`;
+
+const Rating = styled.small`
+  display: block;
+  padding-bottom: 0.5rem;
+  color: #777;
+`;
 
 export default Popular;
