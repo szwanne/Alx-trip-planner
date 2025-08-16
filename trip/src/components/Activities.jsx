@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css";
 
 const Activities = () => {
   const [activities, setActivities] = useState([]);
@@ -17,7 +19,7 @@ const Activities = () => {
     setLoading(true);
     setError(null);
 
-    const url = `https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary?bl_latitude=11.847676&tr_latitude=12.838442&bl_longitude=109.095887&tr_longitude=109.149359&restaurant_tagcategory_standalone=10591&restaurant_tagcategory=10591&limit=5&currency=USD&open_now=false&lunit=km&lang=en_US`;
+    const url = `https://travel-advisor.p.rapidapi.com/restaurants/list-in-boundary?bl_latitude=11.847676&tr_latitude=12.838442&bl_longitude=109.095887&tr_longitude=109.149359&restaurant_tagcategory_standalone=10591&restaurant_tagcategory=10591&limit=30&currency=USD&open_now=false&lunit=km&lang=en_US`;
 
     try {
       const response = await fetch(url, {
@@ -57,16 +59,32 @@ const Activities = () => {
       {loading && <p>Loading activities...</p>}
       {error && <Error>{error}</Error>}
       {!loading && activities.length === 0 && <p>No activities found.</p>}
-
+      {/* <Splide> */}
       <CardsWrapper>
-        {activities.map((activity, index) => (
-          <Card key={index}>
-            <Image src={activity.photo.images.medium.url} alt={activity.name} />
-            <CardTitle>{activity.name}</CardTitle>
-            {activity.address && <p>{activity.address}</p>}
-          </Card>
-        ))}
+        <Splide
+          options={{
+            perPage: 4,
+            arrows: false,
+            pagination: false,
+            drag: "free",
+            gap: "-5rem",
+          }}
+        >
+          {activities.map((activity, index) => (
+            <SplideSlide key={index}>
+              <Card>
+                <Image
+                  src={activity.photo.images.medium.url}
+                  alt={activity.name}
+                />
+                <CardTitle>{activity.name}</CardTitle>
+                {activity.address && <p>{activity.address}</p>}
+              </Card>
+            </SplideSlide>
+          ))}
+        </Splide>
       </CardsWrapper>
+      {/* </Splide> */}
     </Container>
   );
 };
