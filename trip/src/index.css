@@ -73,3 +73,23 @@ button:focus-visible {
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
 }
+
+body {
+  margin: 0% 20%;
+}
+
+h4 {
+  font-size: 1rem;
+  color: rgb(56, 56, 56);
+}
+
+h3 {
+  font-size: 1rem;
+  color: rgb(56, 56, 56);
+  line-height: 2.5rem;
+  margin: 2rem 0rem;
+}
+
+a {
+  color: rgb(56, 56, 56);
+}
