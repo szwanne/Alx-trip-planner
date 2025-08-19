@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 // import { Splide, SplideSlide } from "@splidejs/react-splide";
 // import "@splidejs/react-splide/css";
 
@@ -73,14 +74,16 @@ function Popular() {
           <CardsWrapper>
             {attractions.map((a) => (
               <Card key={a.name}>
-                <Image
-                  src={a.photo || "https://via.placeholder.com/200"}
-                  alt={a.name}
-                />
-                <CardTitle>{a.name}</CardTitle>
-                <Rating>
-                  {a.rating ? `${a.rating} ★` : "No rating available"}
-                </Rating>
+                <Link to={"/place/" + a.id}>
+                  <Image
+                    src={a.photo || "https://via.placeholder.com/200"}
+                    alt={a.name}
+                  />
+                  <CardTitle>{a.name}</CardTitle>
+                  <Rating>
+                    {a.rating ? `${a.rating} ★` : "No rating available"}
+                  </Rating>
+                </Link>
               </Card>
             ))}
           </CardsWrapper>
