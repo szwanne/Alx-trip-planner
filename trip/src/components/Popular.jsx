@@ -28,34 +28,32 @@ function Popular() {
           const bl_longitude = city.lon - delta;
           const tr_longitude = city.lon + delta;
 
+          // geoapify request
+
           const response = await fetch(
-            `https://travel-advisor.p.rapidapi.com/attractions/list-in-boundary?bl_latitude=${bl_latitude}&tr_latitude=${tr_latitude}&bl_longitude=${bl_longitude}&tr_longitude=${tr_longitude}&limit=5&currency=USD&lunit=km&lang=en_US`,
-            {
-              method: "GET",
-              headers: {
-                "X-RapidAPI-Key": import.meta.env.VITE_API_KEY,
-                "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
-              },
-            }
+            `https://api.geoapify.com/v2/places?categories=commercial.supermarket&filter=rect:${bl_longitude},${tr_latitude},${tr_longitude},${bl_latitude}&limit=20&apiKey=${
+              import.meta.env.VITE_API_KEY
+            }`
           );
 
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
           const data = await response.json();
+          console.log(data);
 
-          const attractions = data.data
-            ?.filter((item) => item.name)
-            .map((item) => ({
-              name: item.name,
-              location: item.location_string,
-              latitude: item.latitude,
-              longitude: item.longitude,
-              photo: item.photo?.images?.medium?.url,
-              rating: item.rating,
-              num_reviews: item.num_reviews,
-              ranking: item.ranking,
-              website: item.website,
-            }));
+          // Get top 5 supermarkets
+          const supermarkets = data.features
+            ?.map((item) => ({
+              name: item.properties.name,
+              address: item.properties.address_line2,
+              lat: item.properties.lat,
+              lon: item.properties.lon,
+            }))
+            .slice(0, 5);
 
-          return { city: city.name, attractions };
+          return { city: city.name, supermarkets };
         })
       );
 
@@ -67,24 +65,15 @@ function Popular() {
 
   return (
     <Container>
-      <Title>Popular Destinations</Title>
-      {popular.map(({ city, attractions }) => (
-        <Section key={city}>
-          <CityName>{city}</CityName>
+      <Title>Popular Cities Supermarkets</Title>
+      {popular.map(({ cityData, index }) => (
+        <Section key={index}>
+          <CityName>{cityData}</CityName>
           <CardsWrapper>
-            {attractions.map((a) => (
-              <Card key={a.name}>
-                <Link to={"/place/" + a.id}>
-                  <Image
-                    src={a.photo || "https://via.placeholder.com/200"}
-                    alt={a.name}
-                  />
-                  <CardTitle>{a.name}</CardTitle>
-                  <Rating>
-                    {a.rating ? `${a.rating} ★` : "No rating available"}
-                  </Rating>
-                </Link>
-              </Card>
+            {cityData.supermarkets?.map((store, i) => (
+              <li key={i}>
+                {store.name || "Unnamed"} - {store.address || "No address"}
+              </li>
             ))}
           </CardsWrapper>
         </Section>
