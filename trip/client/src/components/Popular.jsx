@@ -11,8 +11,8 @@ function Popular() {
   const TRIPS_URL = "http://127.0.0.1:8000/api/trips/";
 
   const credentials = {
-    username: "siphozwane",
-    password: "Siyabonga1*",
+    username: import.meta.env.REACT_APP_API_USERNAME,
+    password: import.meta.env.REACT_APP_API_PASSWORD,
   };
 
   // Login
