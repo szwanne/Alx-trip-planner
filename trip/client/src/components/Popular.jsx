@@ -8,7 +8,7 @@ function Popular() {
 
   const LOGIN_URL = "http://127.0.0.1:8000/api/token/";
   const REFRESH_URL = "http://127.0.0.1:8000/api/token/refresh/";
-  const TRIPS_URL = "http://127.0.0.1:8000/api/trips/";
+  const TRIPS_URL = "http://127.0.0.1:8000/api/destinations/";
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,
@@ -92,12 +92,9 @@ function Popular() {
       {trips.map((trip) => (
         <TripCard key={trip.id}>
           <ImageWrapper>
-            <TripImage
-              src={trip.destination.image_url}
-              alt={trip.destination.name}
-            />
+            <TripImage src={trip.image_url} alt={trip.name} />
           </ImageWrapper>
-          <TripTitle>{trip.destination.name}</TripTitle>
+          <TripTitle>{trip.name}</TripTitle>
         </TripCard>
       ))}
     </GridContainer>

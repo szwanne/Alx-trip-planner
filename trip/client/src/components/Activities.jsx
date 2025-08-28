@@ -1,158 +1,152 @@
-// import React, { useEffect, useState } from "react";
-// import styled from "styled-components";
-// import { Splide, SplideSlide } from "@splidejs/react-splide";
-// import "@splidejs/react-splide/css";
-
-// const Activities = () => {
-//   const [activities, setActivities] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   // Pre-known coordinates (example: Cape Town, South Africa)
-//   const coordinates = {
-//     lat: -33.9249,
-//     lng: 18.4241,
-//   };
-
-//   // Fetch activities from Travel Advisor API
-//   const fetchActivities = async () => {
-//     setLoading(true);
-//     setError(null);
-
-//     const url = ``;
-
-//     try {
-//       const response = await fetch(url, {
-//         method: "GET",
-//         headers: {
-//           "x-rapidapi-key": import.meta.env.VITE_API_KEY,
-//           "x-rapidapi-host": "travel-advisor.p.rapidapi.com",
-//         },
-//       });
-
-//       const data = await response.json();
-
-//       if (data?.data) {
-//         // Filter out empty/invalid objects
-//         const filtered = data.data.filter(
-//           (item) => item.name && item.photo?.images?.medium?.url
-//         );
-//         setActivities(filtered);
-//       } else {
-//         setActivities([]);
-//       }
-//     } catch (err) {
-//       console.error("Error fetching activities:", err);
-//       setError("Failed to load activities.");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   useEffect(() => {
-//     fetchActivities();
-//   }, []);
-
-//   return (
-//     <Container>
-//       <Title>Popular Activities</Title>
-//       {loading && <p>Loading activities...</p>}
-//       {error && <Error>{error}</Error>}
-//       {!loading && activities.length === 0 && <p>No activities found.</p>}
-//       {/* <Splide> */}
-//       <CardsWrapper>
-//         <Splide
-//           options={{
-//             perPage: 4,
-//             arrows: false,
-//             pagination: false,
-//             drag: "free",
-//             gap: "-5rem",
-//           }}
-//         >
-//           {activities.map((activity, index) => (
-//             <SplideSlide key={index}>
-//               <Card>
-//                 <Image
-//                   src={activity.photo.images.medium.url}
-//                   alt={activity.name}
-//                 />
-//                 <CardTitle>{activity.name}</CardTitle>
-//                 {activity.address && <p>{activity.address}</p>}
-//               </Card>
-//             </SplideSlide>
-//           ))}
-//         </Splide>
-//       </CardsWrapper>
-//       {/* </Splide> */}
-//     </Container>
-//   );
-// };
-
-// // Styled Components
-// const Container = styled.div`
-//   padding: 2rem;
-//   font-family: Arial, sans-serif;
-// `;
-
-// const Title = styled.h1`
-//   text-align: center;
-//   margin-bottom: 2rem;
-// `;
-
-// const Section = styled.div`
-//   margin-bottom: 3rem;
-// `;
-
-// const CityName = styled.h2`
-//   margin-bottom: 1rem;
-//   color: #333;
-// `;
-
-// const CardsWrapper = styled.div`
-//   display: flex;
-//   flex-wrap: wrap;
-//   gap: 1rem;
-// `;
-
-// const Card = styled.div`
-//   width: 200px;
-//   background: white;
-//   border-radius: 10px;
-//   overflow: hidden;
-//   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-//   text-align: center;
-// `;
-
-// const Image = styled.img`
-//   width: 100%;
-//   height: 150px;
-//   object-fit: cover;
-// `;
-
-// const CardTitle = styled.p`
-//   font-weight: bold;
-//   padding: 0.5rem;
-//   color: #222;
-// `;
-
-// const Rating = styled.small`
-//   display: block;
-//   padding-bottom: 0.5rem;
-//   color: #777;
-// `;
-
-// const Error = styled.p`
-//   color: red;
-// `;
-
-// export default Activities;
-
-import React from "react";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css";
 
 function Activities() {
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  return <div>hi</div>;
+  const LOGIN_URL = "http://127.0.0.1:8000/api/token/";
+  const REFRESH_URL = "http://127.0.0.1:8000/api/token/refresh/";
+  const ACTIVITIES_URL = "http://127.0.0.1:8000/api/activity/";
+
+  const credentials = {
+    username: import.meta.env.REACT_APP_API_USERNAME,
+    password: import.meta.env.REACT_APP_API_PASSWORD,
+  };
+
+  // Login
+  const login = async () => {
+    const response = await fetch(LOGIN_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
+
+    if (!response.ok) throw new Error("Login failed");
+
+    const data = await response.json();
+    localStorage.setItem("accessToken", data.access);
+    localStorage.setItem("refreshToken", data.refresh);
+    return data.access;
+  };
+
+  // Refresh token
+  const refreshToken = async () => {
+    const refresh = localStorage.getItem("refreshToken");
+    if (!refresh) throw new Error("No refresh token found");
+
+    const response = await fetch(REFRESH_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh }),
+    });
+
+    if (!response.ok) throw new Error("Failed to refresh token");
+
+    const data = await response.json();
+    localStorage.setItem("accessToken", data.access);
+    return data.access;
+  };
+
+  // Fetch trips
+  const fetchActivities = async () => {
+    try {
+      let accessToken = localStorage.getItem("accessToken") || (await login());
+
+      let response = await fetch(ACTIVITIES_URL, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      // Retry if token expired
+      if (response.status === 401) {
+        accessToken = await refreshToken();
+        response = await fetch(ACTIVITIES_URL, {
+          method: "GET",
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+      }
+
+      if (!response.ok) throw new Error("Failed to fetch activities");
+
+      const data = await response.json();
+      setActivities(data.results || []);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchActivities();
+  }, []);
+
+  if (loading) return <p>Loading activities...</p>;
+  if (error) return <p>Error: {error}</p>;
+
+  return (
+    <CardsWrapper>
+      <Splide
+        options={{
+          perPage: 4,
+          perMove: 4,
+          arrows: false,
+          pagination: false,
+          drag: "free",
+          gap: "15px",
+        }}
+      >
+        {activities.map((item) => (
+          <SplideSlide key={item.id}>
+            <Card>
+              <ImageWrapper>
+                <Image src={item.image_url} alt={item.name} />
+              </ImageWrapper>
+              <CardTitle>{item.name}</CardTitle>
+            </Card>
+          </SplideSlide>
+        ))}
+      </Splide>
+    </CardsWrapper>
+  );
 }
 
 export default Activities;
+
+const ImageWrapper = styled.div`
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  border-radius: 8px;
+`;
+
+const CardsWrapper = styled.div`
+  max-width: 1000px; /* Adjust for wider carousel */
+  margin: 0 auto;
+`;
+
+const Card = styled.div`
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
+
+const Image = styled.img`
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+`;
+
+const CardTitle = styled.p`
+  font-weight: bold;
+  padding: 0.5rem;
+  color: #222;
+`;
