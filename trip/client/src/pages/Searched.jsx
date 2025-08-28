@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
-import "@splidejs/react-splide/css";
 
 function Searched() {
   const [searchedTrips, setSearchedTrips] = useState([]);
@@ -101,29 +99,16 @@ function Searched() {
       {searchedTrips.length === 0 ? (
         <p>No results found.</p>
       ) : (
-        <CardsWrapper>
-          <Splide
-            options={{
-              perPage: 4,
-              perMove: 4,
-              arrows: false,
-              pagination: false,
-              drag: "free",
-              gap: "15px",
-            }}
-          >
-            {searchedTrips.map((item) => (
-              <SplideSlide key={item.id}>
-                <Card>
-                  <ImageWrapper>
-                    <Image src={item.image_url} alt={item.title} />
-                  </ImageWrapper>
-                  <CardTitle>{item.title}</CardTitle>
-                </Card>
-              </SplideSlide>
-            ))}
-          </Splide>
-        </CardsWrapper>
+        <Grid>
+          {searchedTrips.map((item) => (
+            <Card key={item.id}>
+              <ImageWrapper>
+                <Image src={item.image_url} alt={item.title} />
+              </ImageWrapper>
+              <CardTitle>{item.name}</CardTitle>
+            </Card>
+          ))}
+        </Grid>
       )}
     </Container>
   );
@@ -131,45 +116,54 @@ function Searched() {
 
 export default Searched;
 
+// ---------- STYLES ----------
+
+const Container = styled.div`
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+`;
+
+const Title = styled.h2`
+  margin-bottom: 2rem;
+  color: #222;
+  font-size: 1.5rem;
+`;
+
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+`;
+
+const Card = styled.div`
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15);
+  }
+`;
+
 const ImageWrapper = styled.div`
   width: 100%;
   height: 160px;
   overflow: hidden;
-  border-radius: 8px;
-`;
-
-const CardsWrapper = styled.div`
-  max-width: 1000px;
-  margin: 0 auto;
-`;
-
-const Card = styled.div`
-  width: 100%;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
 `;
 
 const Image = styled.img`
   width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
 `;
 
 const CardTitle = styled.p`
   font-weight: bold;
-  padding: 0.5rem;
-  color: #223;
-`;
-
-const Title = styled.h2`
-  padding-left: 20px;
-  margin-bottom: 2rem;
-`;
-
-const Container = styled.div`
-  padding: 2rem;
-  font-family: Arial, sans-serif;
+  padding: 0.75rem;
+  color: #333;
+  font-size: 1.5rem;
 `;
