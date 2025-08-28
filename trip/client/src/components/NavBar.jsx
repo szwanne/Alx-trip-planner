@@ -27,8 +27,8 @@ function NavBar() {
         <SLink to={"/trips"}>
           <h4>Trips</h4>
         </SLink>
-        <SLink to={"/inbox"}>
-          <h4>Inbox</h4>
+        <SLink to={"/hotel"}>
+          <h4>Hotel</h4>
         </SLink>
         <SLink to={"/travel"}>
           <h4>Travel</h4>

@@ -148,5 +148,5 @@ const Image = styled.img`
 const CardTitle = styled.p`
   font-weight: bold;
   padding: 0.5rem;
-  color: #222;
+  color: #223;
 `;
