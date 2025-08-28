@@ -90,29 +90,32 @@ function Activities() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <CardsWrapper>
-      <Splide
-        options={{
-          perPage: 4,
-          perMove: 4,
-          arrows: false,
-          pagination: false,
-          drag: "free",
-          gap: "15px",
-        }}
-      >
-        {activities.map((item) => (
-          <SplideSlide key={item.id}>
-            <Card>
-              <ImageWrapper>
-                <Image src={item.image_url} alt={item.name} />
-              </ImageWrapper>
-              <CardTitle>{item.name}</CardTitle>
-            </Card>
-          </SplideSlide>
-        ))}
-      </Splide>
-    </CardsWrapper>
+    <Container>
+      <Title>Discover Activities</Title>
+      <CardsWrapper>
+        <Splide
+          options={{
+            perPage: 4,
+            perMove: 4,
+            arrows: false,
+            pagination: false,
+            drag: "free",
+            gap: "15px",
+          }}
+        >
+          {activities.map((item) => (
+            <SplideSlide key={item.id}>
+              <Card>
+                <ImageWrapper>
+                  <Image src={item.image_url} alt={item.name} />
+                </ImageWrapper>
+                <CardTitle>{item.name}</CardTitle>
+              </Card>
+            </SplideSlide>
+          ))}
+        </Splide>
+      </CardsWrapper>
+    </Container>
   );
 }
 
@@ -149,4 +152,15 @@ const CardTitle = styled.p`
   font-weight: bold;
   padding: 0.5rem;
   color: #223;
+`;
+
+const Title = styled.h2`
+  text-align: 0;
+  padding-left: 20px;
+  margin-bottom: 2rem;
+`;
+
+const Container = styled.div`
+  padding: 2rem;
+  font-family: Arial, sans-serif;
 `;
