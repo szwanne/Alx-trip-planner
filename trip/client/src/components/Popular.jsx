@@ -88,16 +88,19 @@ function Popular() {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <GridContainer>
-      {trips.map((trip) => (
-        <TripCard key={trip.id}>
-          <ImageWrapper>
-            <TripImage src={trip.image_url} alt={trip.name} />
-          </ImageWrapper>
-          <TripTitle>{trip.name}</TripTitle>
-        </TripCard>
-      ))}
-    </GridContainer>
+    <Container>
+      <Title>Explore Popular Places</Title>
+      <GridContainer>
+        {trips.map((trip) => (
+          <TripCard key={trip.id}>
+            <ImageWrapper>
+              <TripImage src={trip.image_url} alt={trip.name} />
+            </ImageWrapper>
+            <TripTitle>{trip.name}</TripTitle>
+          </TripCard>
+        ))}
+      </GridContainer>
+    </Container>
   );
 }
 
@@ -139,4 +142,15 @@ const TripTitle = styled.h2`
   font-weight: 600; /* font-semibold */
   margin-top: 8px;
   text-align: center;
+`;
+
+const Title = styled.h2`
+  text-align: 0;
+  padding-left: 20px;
+  margin-bottom: 2rem;
+`;
+
+const Container = styled.div`
+  padding: 2rem;
+  font-family: Arial, sans-serif;
 `;
