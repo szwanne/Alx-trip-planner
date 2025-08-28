@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
+import { Link } from "react-router-dom";
 
 function Activities() {
   const [activities, setActivities] = useState([]);
@@ -106,10 +107,12 @@ function Activities() {
           {activities.map((item) => (
             <SplideSlide key={item.id}>
               <Card>
-                <ImageWrapper>
-                  <Image src={item.image_url} alt={item.name} />
-                </ImageWrapper>
-                <CardTitle>{item.name}</CardTitle>
+                <Link to={"/place/" + item.id}>
+                  <ImageWrapper>
+                    <Image src={item.image_url} alt={item.name} />
+                  </ImageWrapper>
+                  <CardTitle>{item.name}</CardTitle>
+                </Link>
               </Card>
             </SplideSlide>
           ))}

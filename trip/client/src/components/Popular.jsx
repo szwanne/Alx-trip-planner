@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 function Popular() {
   const [trips, setTrips] = useState([]);
@@ -93,10 +94,12 @@ function Popular() {
       <GridContainer>
         {trips.map((trip) => (
           <TripCard key={trip.id}>
-            <ImageWrapper>
-              <TripImage src={trip.image_url} alt={trip.name} />
-            </ImageWrapper>
-            <TripTitle>{trip.name}</TripTitle>
+            <Link to={"/place/" + trip.id}>
+              <ImageWrapper>
+                <TripImage src={trip.image_url} alt={trip.name} />
+              </ImageWrapper>
+              <TripTitle>{trip.name}</TripTitle>
+            </Link>
           </TripCard>
         ))}
       </GridContainer>
