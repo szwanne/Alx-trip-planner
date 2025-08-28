@@ -27,17 +27,17 @@ function NavBar() {
         <SLink to={"/trips"}>
           <h4>Trips</h4>
         </SLink>
-        <SLink to={"/hotel"}>
+        <SLink to={"/hotels"}>
           <h4>Hotel</h4>
         </SLink>
-        <SLink to={"/travel"}>
-          <h4>Travel</h4>
+        <SLink to={"/flights"}>
+          <h4>Flights</h4>
         </SLink>
       </LeftLink>
 
       <RightLink>
         <MiniSearchBar />
-        <SLink to={"/explore"}>
+        <SLink to={"/languages"}>
           <TfiWorld />
         </SLink>
         <SLink to={"/profile"}>
