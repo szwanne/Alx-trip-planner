@@ -28,7 +28,7 @@ function NavBar() {
           <h4>Trips</h4>
         </SLink>
         <SLink to={"/hotels"}>
-          <h4>Hotel</h4>
+          <h4>Hotels</h4>
         </SLink>
         <SLink to={"/flights"}>
           <h4>Flights</h4>
@@ -63,6 +63,12 @@ const SLink = styled(NavLink)`
   border-radius: 50%;
   margin-right: 2rem;
   text-decoration: none;
+  font-size: 20px;
+  h4 {
+   &:hover {
+      color: #ebc014ff;
+  }
+  
 `;
 
 const LeftLink = styled.div`

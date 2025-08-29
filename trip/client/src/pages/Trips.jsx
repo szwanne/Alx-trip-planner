@@ -95,12 +95,12 @@ function Trips() {
       <GridContainer>
         {trips.map((trip) => (
           <TripCard key={trip.id}>
-            <Link to={"/place/" + trip.id}>
+            <StyledLink to={"/place/" + trip.id}>
               <ImageWrapper>
                 <TripImage src={trip.image_url} alt={trip.name} />
               </ImageWrapper>
               <TripTitle>{trip.name}</TripTitle>
-            </Link>
+            </StyledLink>
           </TripCard>
         ))}
       </GridContainer>
@@ -124,6 +124,18 @@ const TripCard = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   padding: 8px;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-5px);
+  }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
   display: flex;
   flex-direction: column;
   align-items: center;
