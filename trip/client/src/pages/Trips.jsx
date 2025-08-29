@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
-import "@splidejs/react-splide/css";
 import { Link } from "react-router-dom";
 
-function Activities() {
-  const [activities, setActivities] = useState([]);
+function Trips() {
+  const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const LOGIN_URL = "http://127.0.0.1:8000/api/token/";
   const REFRESH_URL = "http://127.0.0.1:8000/api/token/refresh/";
-  const ACTIVITIES_URL = "http://127.0.0.1:8000/api/activity/";
+  const DESTINATION_URL = "http://127.0.0.1:8000/api/activity/";
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,
     password: import.meta.env.REACT_APP_API_PASSWORD,
   };
 
-  // Login
+  // ---- Login ----
   const login = async () => {
     const response = await fetch(LOGIN_URL, {
       method: "POST",
@@ -27,14 +25,14 @@ function Activities() {
     });
 
     if (!response.ok) throw new Error("Login failed");
-
     const data = await response.json();
+
     localStorage.setItem("accessToken", data.access);
     localStorage.setItem("refreshToken", data.refresh);
     return data.access;
   };
 
-  // Refresh token
+  // ---- Refresh ----
   const refreshToken = async () => {
     const refresh = localStorage.getItem("refreshToken");
     if (!refresh) throw new Error("No refresh token found");
@@ -46,35 +44,35 @@ function Activities() {
     });
 
     if (!response.ok) throw new Error("Failed to refresh token");
-
     const data = await response.json();
+
     localStorage.setItem("accessToken", data.access);
     return data.access;
   };
 
-  // Fetch trips
-  const fetchActivities = async () => {
+  // ---- Fetch All Destinations ----
+  const fetchDestinations = async () => {
     try {
       let accessToken = localStorage.getItem("accessToken") || (await login());
 
-      let response = await fetch(ACTIVITIES_URL, {
+      let response = await fetch(DESTINATION_URL, {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      // Retry if token expired
+      // retry if token expired
       if (response.status === 401) {
         accessToken = await refreshToken();
-        response = await fetch(ACTIVITIES_URL, {
+        response = await fetch(DESTINATION_URL, {
           method: "GET",
           headers: { Authorization: `Bearer ${accessToken}` },
         });
       }
 
-      if (!response.ok) throw new Error("Failed to fetch activities");
+      if (!response.ok) throw new Error("Failed to fetch destinations");
 
       const data = await response.json();
-      setActivities(data.results || []);
+      setTrips(data.results || []);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -84,45 +82,52 @@ function Activities() {
   };
 
   useEffect(() => {
-    fetchActivities();
+    fetchDestinations();
   }, []);
 
-  if (loading) return <p>Loading activities...</p>;
+  if (loading) return <p>Loading trips...</p>;
   if (error) return <p>Error: {error}</p>;
+  if (!trips.length) return <p>No trips found.</p>;
 
   return (
     <Container>
-      <Title>Discover Activities</Title>
-      <CardsWrapper>
-        <Splide
-          options={{
-            perPage: 4,
-            perMove: 4,
-            arrows: false,
-            pagination: false,
-            drag: "free",
-            gap: "15px",
-          }}
-        >
-          {activities.map((item) => (
-            <SplideSlide key={item.id}>
-              <Card>
-                <Link to={"/place/" + item.id}>
-                  <ImageWrapper>
-                    <Image src={item.image_url} alt={item.name} />
-                  </ImageWrapper>
-                  <CardTitle>{item.name}</CardTitle>
-                </Link>
-              </Card>
-            </SplideSlide>
-          ))}
-        </Splide>
-      </CardsWrapper>
+      <Title>Explore All Trips</Title>
+      <GridContainer>
+        {trips.map((trip) => (
+          <TripCard key={trip.id}>
+            <Link to={"/place/" + trip.id}>
+              <ImageWrapper>
+                <TripImage src={trip.image_url} alt={trip.name} />
+              </ImageWrapper>
+              <TripTitle>{trip.name}</TripTitle>
+            </Link>
+          </TripCard>
+        ))}
+      </GridContainer>
     </Container>
   );
 }
 
-export default Activities;
+export default Trips;
+
+// ------------------ STYLES ------------------
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  padding: 16px;
+`;
+
+const TripCard = styled.div`
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const ImageWrapper = styled.div`
   width: 100%;
@@ -131,34 +136,20 @@ const ImageWrapper = styled.div`
   border-radius: 8px;
 `;
 
-const CardsWrapper = styled.div`
-  max-width: 1000px; /* Adjust for wider carousel */
-  margin: 0 auto;
-`;
-
-const Card = styled.div`
+const TripImage = styled.img`
   width: 100%;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
 `;
 
-const CardTitle = styled.p`
-  font-weight: bold;
-  padding: 0.5rem;
-  color: #223;
+const TripTitle = styled.h2`
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 8px;
+  text-align: center;
 `;
 
 const Title = styled.h2`
-  text-align: 0;
   padding-left: 20px;
   margin-bottom: 2rem;
 `;

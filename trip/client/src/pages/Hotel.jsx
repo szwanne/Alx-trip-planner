@@ -1,24 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
-import "@splidejs/react-splide/css";
-import { Link } from "react-router-dom";
 
-function Activities() {
-  const [activities, setActivities] = useState([]);
+function Hotel() {
+  const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const LOGIN_URL = "http://127.0.0.1:8000/api/token/";
   const REFRESH_URL = "http://127.0.0.1:8000/api/token/refresh/";
-  const ACTIVITIES_URL = "http://127.0.0.1:8000/api/activity/";
+  const HOTEL_URL = "http://127.0.0.1:8000/api/hotels/";
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,
     password: import.meta.env.REACT_APP_API_PASSWORD,
   };
 
-  // Login
+  // ---- Login ----
   const login = async () => {
     const response = await fetch(LOGIN_URL, {
       method: "POST",
@@ -27,14 +24,14 @@ function Activities() {
     });
 
     if (!response.ok) throw new Error("Login failed");
-
     const data = await response.json();
+
     localStorage.setItem("accessToken", data.access);
     localStorage.setItem("refreshToken", data.refresh);
     return data.access;
   };
 
-  // Refresh token
+  // ---- Refresh ----
   const refreshToken = async () => {
     const refresh = localStorage.getItem("refreshToken");
     if (!refresh) throw new Error("No refresh token found");
@@ -46,35 +43,34 @@ function Activities() {
     });
 
     if (!response.ok) throw new Error("Failed to refresh token");
-
     const data = await response.json();
+
     localStorage.setItem("accessToken", data.access);
     return data.access;
   };
 
-  // Fetch trips
-  const fetchActivities = async () => {
+  // ---- Fetch Hotels ----
+  const fetchHotels = async () => {
     try {
       let accessToken = localStorage.getItem("accessToken") || (await login());
 
-      let response = await fetch(ACTIVITIES_URL, {
+      let response = await fetch(HOTEL_URL, {
         method: "GET",
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      // Retry if token expired
       if (response.status === 401) {
         accessToken = await refreshToken();
-        response = await fetch(ACTIVITIES_URL, {
+        response = await fetch(HOTEL_URL, {
           method: "GET",
           headers: { Authorization: `Bearer ${accessToken}` },
         });
       }
 
-      if (!response.ok) throw new Error("Failed to fetch activities");
+      if (!response.ok) throw new Error("Failed to fetch hotels");
 
       const data = await response.json();
-      setActivities(data.results || []);
+      setHotels(data.results || []);
       setLoading(false);
     } catch (err) {
       console.error(err);
@@ -84,83 +80,99 @@ function Activities() {
   };
 
   useEffect(() => {
-    fetchActivities();
+    fetchHotels();
   }, []);
 
-  if (loading) return <p>Loading activities...</p>;
+  if (loading) return <p>Loading hotels...</p>;
   if (error) return <p>Error: {error}</p>;
+  if (!hotels.length) return <p>No hotels found.</p>;
 
   return (
     <Container>
-      <Title>Discover Activities</Title>
-      <CardsWrapper>
-        <Splide
-          options={{
-            perPage: 4,
-            perMove: 4,
-            arrows: false,
-            pagination: false,
-            drag: "free",
-            gap: "15px",
-          }}
-        >
-          {activities.map((item) => (
-            <SplideSlide key={item.id}>
-              <Card>
-                <Link to={"/place/" + item.id}>
-                  <ImageWrapper>
-                    <Image src={item.image_url} alt={item.name} />
-                  </ImageWrapper>
-                  <CardTitle>{item.name}</CardTitle>
-                </Link>
-              </Card>
-            </SplideSlide>
-          ))}
-        </Splide>
-      </CardsWrapper>
+      <Title>Available Hotels</Title>
+      <GridContainer>
+        {hotels.map((hotel) => (
+          <HotelCard key={hotel.id}>
+            <ImageWrapper>
+              <HotelImage src={hotel.image_url} alt={hotel.name} />
+            </ImageWrapper>
+            <HotelDetails>
+              <HotelName>{hotel.name}</HotelName>
+              <HotelLocation>{hotel.location}</HotelLocation>
+              <HotelPrice>${hotel.price_per_night} / night</HotelPrice>
+              <HotelRating>⭐ {hotel.rating.toFixed(1)}</HotelRating>
+            </HotelDetails>
+          </HotelCard>
+        ))}
+      </GridContainer>
     </Container>
   );
 }
 
-export default Activities;
+export default Hotel;
+
+// ------------------ STYLES ------------------
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 16px;
+`;
+
+const HotelCard = styled.div`
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  overflow: hidden;
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-5px);
+  }
+`;
 
 const ImageWrapper = styled.div`
   width: 100%;
-  height: 160px;
+  height: 180px;
   overflow: hidden;
-  border-radius: 8px;
 `;
 
-const CardsWrapper = styled.div`
-  max-width: 1000px; /* Adjust for wider carousel */
-  margin: 0 auto;
-`;
-
-const Card = styled.div`
+const HotelImage = styled.img`
   width: 100%;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-`;
-
-const Image = styled.img`
-  width: 100%;
-  height: 150px;
+  height: 100%;
   object-fit: cover;
 `;
 
-const CardTitle = styled.p`
+const HotelDetails = styled.div`
+  padding: 12px;
+`;
+
+const HotelName = styled.h3`
+  font-size: 1.1rem;
   font-weight: bold;
-  padding: 0.5rem;
-  color: #223;
+  margin-bottom: 6px;
+`;
+
+const HotelLocation = styled.p`
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 6px;
+`;
+
+const HotelPrice = styled.p`
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+`;
+
+const HotelRating = styled.p`
+  font-size: 0.9rem;
+  color: #ff9800;
 `;
 
 const Title = styled.h2`
-  text-align: 0;
   padding-left: 20px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 `;
 
 const Container = styled.div`

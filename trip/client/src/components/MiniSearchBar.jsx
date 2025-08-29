@@ -29,7 +29,7 @@ function MiniSearchBar() {
 }
 
 const FormStyle = styled.form`
-  margin: 0rem 2rem;
+  margin: 1.5rem 2rem;
   input {
     border: none;
     background: linear-gradient(35deg, #494949, #313132);
