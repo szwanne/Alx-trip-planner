@@ -77,6 +77,12 @@ const Logo = styled.div`
   div {
     display: flex;
     gap: 15px;
+    font-size: 30px;
+    padding-top: 15px;
+    align-items: center;
+  }
+  h4 {
+    line-height: 65px;
   }
 `;
 

@@ -20,6 +20,7 @@ function Pages() {
       <Route path="/trips/" element={<Trips />} />
       <Route path="/hotels/" element={<Hotel />} />
       <Route path="/flights/" element={<Flight />} />
+      <Route path="/profile/" element={<Profile />} />
     </Routes>
   );
 }
