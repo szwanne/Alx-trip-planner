@@ -107,12 +107,12 @@ function Activities() {
           {activities.map((item) => (
             <SplideSlide key={item.id}>
               <Card>
-                <Link to={"/place/" + item.id}>
+                <StyledLink to={"/place/" + item.id}>
                   <ImageWrapper>
                     <Image src={item.image_url} alt={item.name} />
                   </ImageWrapper>
                   <CardTitle>{item.name}</CardTitle>
-                </Link>
+                </StyledLink>
               </Card>
             </SplideSlide>
           ))}
@@ -143,6 +143,18 @@ const Card = styled.div`
   overflow: hidden;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-5px);
+  }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit; /* Ensures text keeps the default color */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Image = styled.img`
@@ -155,8 +167,8 @@ const CardTitle = styled.p`
   font-weight: bold;
   padding: 0.5rem;
   color: #223;
+  text-decoration: none;
 `;
-
 const Title = styled.h2`
   text-align: 0;
   padding-left: 20px;

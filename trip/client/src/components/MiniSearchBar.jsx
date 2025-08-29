@@ -33,9 +33,9 @@ const FormStyle = styled.form`
   input {
     border: none;
     background: linear-gradient(35deg, #494949, #313132);
-    font-size: 1.5rem;
+    font-size: 1rem;
     color: white;
-    padding: 0.5rem 0.5rem;
+    padding: 0.5rem 2.5rem;
     border-radius: 1rem;
     outline: none;
     width: 150px;

@@ -95,12 +95,12 @@ function Explore() {
       <GridContainer>
         {trips.map((trip) => (
           <TripCard key={trip.id}>
-            <Link to={"/place/" + trip.id}>
+            <StyledLink to={"/place/" + trip.id}>
               <ImageWrapper>
                 <TripImage src={trip.image_url} alt={trip.name} />
               </ImageWrapper>
               <TripTitle>{trip.name}</TripTitle>
-            </Link>
+            </StyledLink>
           </TripCard>
         ))}
       </GridContainer>
@@ -127,6 +127,10 @@ const TripCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-5px);
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -147,6 +151,14 @@ const TripTitle = styled.h2`
   font-weight: 600;
   margin-top: 8px;
   text-align: center;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit; /* Ensures text keeps the default color */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const Title = styled.h2`
