@@ -11,9 +11,9 @@ function Place() {
   const [bookingDate, setBookingDate] = useState("");
   const [cost] = useState(250); // mock cost
 
-  const LOGIN_URL = "http://127.0.0.1:8000/api/token/";
-  const REFRESH_URL = "http://127.0.0.1:8000/api/token/refresh/";
-  const DESTINATION_URL = "http://127.0.0.1:8000/api/destinations/";
+  const LOGIN_URL = `${VITE_API_BASE_URL}/api/token/`;
+  const REFRESH_URL = `${VITE_API_BASE_URL}/api/token/refresh/`;
+  const DESTINATION_URL = `${VITE_API_BASE_URL}/api/destinations/`;
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,

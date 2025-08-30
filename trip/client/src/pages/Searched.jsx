@@ -9,9 +9,9 @@ function Searched() {
 
   const { search } = useParams();
 
-  const LOGIN_URL = "http://127.0.0.1:8000/api/token/";
-  const REFRESH_URL = "http://127.0.0.1:8000/api/token/refresh/";
-  const SEARCH_URL = "http://127.0.0.1:8000/api/destinations/?search=";
+  const LOGIN_URL = `${VITE_API_BASE_URL}/api/token/`;
+  const REFRESH_URL = `${VITE_API_BASE_URL}/api/token/refresh/`;
+  const SEARCH_URL = `${VITE_API_BASE_URL}/api/destinations/?search=`;
 
   const credentials = {
     username: import.meta.env.VITE_API_USERNAME,
