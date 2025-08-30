@@ -13,9 +13,9 @@ function Place() {
 
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-  const LOGIN_URL = `${API_BASE_URL}/api/token/`;
-  const REFRESH_URL = `${API_BASE_URL}/api/token/refresh/`;
-  const DESTINATION_URL = `${API_BASE_URL}/api/destinations/`;
+  const LOGIN_URL = `${API_BASE_URL}/token/`;
+  const REFRESH_URL = `${API_BASE_URL}/token/refresh/`;
+  const DESTINATION_URL = `${API_BASE_URL}/destinations/`;
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,
