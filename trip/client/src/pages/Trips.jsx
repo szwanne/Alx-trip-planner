@@ -14,8 +14,8 @@ function Trips() {
   const DESTINATION_URL = `${API_BASE_URL}/activity/`;
 
   const credentials = {
-    username: import.meta.env.REACT_APP_API_USERNAME,
-    password: import.meta.env.REACT_APP_API_PASSWORD,
+    username: import.meta.env.VITE_API_USERNAME,
+    password: import.meta.env.VITE_API_PASSWORD,
   };
 
   // ---- Login ----
