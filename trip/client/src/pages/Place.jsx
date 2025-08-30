@@ -11,9 +11,11 @@ function Place() {
   const [bookingDate, setBookingDate] = useState("");
   const [cost] = useState(250); // mock cost
 
-  const LOGIN_URL = `${VITE_API_BASE_URL}/api/token/`;
-  const REFRESH_URL = `${VITE_API_BASE_URL}/api/token/refresh/`;
-  const DESTINATION_URL = `${VITE_API_BASE_URL}/api/destinations/`;
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const LOGIN_URL = `${API_BASE_URL}/api/token/`;
+  const REFRESH_URL = `${API_BASE_URL}/api/token/refresh/`;
+  const DESTINATION_URL = `${API_BASE_URL}/api/destinations/`;
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,

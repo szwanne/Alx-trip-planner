@@ -9,9 +9,11 @@ function Searched() {
 
   const { search } = useParams();
 
-  const LOGIN_URL = `${VITE_API_BASE_URL}/api/token/`;
-  const REFRESH_URL = `${VITE_API_BASE_URL}/api/token/refresh/`;
-  const SEARCH_URL = `${VITE_API_BASE_URL}/api/destinations/?search=`;
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const LOGIN_URL = `${API_BASE_URL}/token/`;
+  const REFRESH_URL = `${API_BASE_URL}/token/refresh/`;
+  const SEARCH_URL = `${API_BASE_URL}/destinations/?search=`;
 
   const credentials = {
     username: import.meta.env.VITE_API_USERNAME,

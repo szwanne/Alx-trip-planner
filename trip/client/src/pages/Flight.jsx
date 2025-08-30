@@ -6,9 +6,11 @@ function Flight() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const LOGIN_URL = `${VITE_API_BASE_URL}/api/token/`;
-  const REFRESH_URL = `${VITE_API_BASE_URL}/api/token/refresh/`;
-  const FLIGHTS_URL = `${VITE_API_BASE_URLS}/api/flightoffers/`;
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const LOGIN_URL = `${API_BASE_URL}/token/`;
+  const REFRESH_URL = `${API_BASE_URL}/token/refresh/`;
+  const FLIGHTS_URL = `${API_BASE_URLS}/flightoffers/`;
 
   const credentials = {
     username: import.meta.env.VITE_API_USERNAME,
