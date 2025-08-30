@@ -6,9 +6,11 @@ function Hotel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const LOGIN_URL = `${VITE_API_BASE_URL}/api/token/`;
-  const REFRESH_URL = `${VITE_API_BASE_URL}/api/token/refresh/`;
-  const HOTEL_URL = `${VITE_API_BASE_URL}/api/hotels/`;
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  const LOGIN_URL = `${API_BASE_URL}/token/`;
+  const REFRESH_URL = `${API_BASE_URL}/token/refresh/`;
+  const HOTEL_URL = `${API_BASE_URL}/hotels/`;
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,
