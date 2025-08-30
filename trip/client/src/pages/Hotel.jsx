@@ -6,9 +6,9 @@ function Hotel() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const LOGIN_URL = "http://127.0.0.1:8000/api/token/";
-  const REFRESH_URL = "http://127.0.0.1:8000/api/token/refresh/";
-  const HOTEL_URL = "http://127.0.0.1:8000/api/hotels/";
+  const LOGIN_URL = `${VITE_API_BASE_URL}/api/token/`;
+  const REFRESH_URL = `${VITE_API_BASE_URL}/api/token/refresh/`;
+  const HOTEL_URL = `${VITE_API_BASE_URL}/api/hotels/`;
 
   const credentials = {
     username: import.meta.env.REACT_APP_API_USERNAME,
